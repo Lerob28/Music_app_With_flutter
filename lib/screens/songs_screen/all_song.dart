@@ -1,10 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:inch_music_player/screens/songs_screen/single_song_screen.dart';
 import 'package:on_audio_query/on_audio_query.dart';
-import 'package:flutter/services.dart';
-import 'package:just_audio/just_audio.dart';
-import 'package:rxdart/rxdart.dart';
 
 
 class AllSongScreen extends StatefulWidget {
@@ -17,7 +15,6 @@ class AllSongScreen extends StatefulWidget {
 class _AllSongScreenState extends State<AllSongScreen> {
 
   final OnAudioQuery _audioDeviceQuery = OnAudioQuery();
-  final _audioPlayer = AudioPlayer();
   bool _hasPermission = false;
 
 
@@ -29,15 +26,20 @@ class _AllSongScreenState extends State<AllSongScreen> {
     _hasPermission ? setState(() {}) : null;
   }
 
-  _playSong({required String? songUri}) {
-    try {
-      _audioPlayer.setAudioSource(
-          AudioSource.uri(Uri.parse(songUri!))
-      );
-      _audioPlayer.play();
-    } on Exception {
-      log("Error when trying to play song!");
-    }
+
+
+  _navigateToSingleSongScreen({required SongModel selectedSong}) {
+    RouteSettings routeArgument = RouteSettings(
+        name: 'song',
+        arguments: selectedSong
+    );
+
+    MaterialPageRoute<SingleSongScreen> route = MaterialPageRoute(
+      builder: (context) => const SingleSongScreen(),
+      settings: routeArgument,
+    );
+
+    Navigator.push(context, route);
   }
 
   @override
@@ -116,15 +118,18 @@ class _AllSongScreenState extends State<AllSongScreen> {
       itemCount: songList!.length,
       itemBuilder: (context, index) {
         return Padding(
-          padding: const EdgeInsets.all(10.0),
+          padding: const EdgeInsets.all(5.0),
           child: ListTile(
-            leading: const Icon(Icons.music_note),
+            leading: const CircleAvatar(
+                radius: 20,
+                child:  Icon(Icons.music_note),
+            ),
             title: Text(songList![index].displayName),
             subtitle: (songList![index].artist == null) || (songList![index].artist == '<unknown>')
-              ? Text('No artist ${'    '}${songList![index].duration}')
+              ? Text('Borel Njeunkwe ${'    '}${songList![index].duration}')
               : Text('${songList![index].artist}${'    '}${songList![index].duration}'),
             trailing: const Icon(Icons.more_horiz),
-            onTap: () => _playSong(songUri: songList![index].uri),
+            onTap: () => _navigateToSingleSongScreen(selectedSong: songList![index]),
           ),
         );
       },
@@ -152,7 +157,5 @@ class _AllSongScreenState extends State<AllSongScreen> {
       ),
     );
   }
-
-
 
 }

@@ -16,3 +16,9 @@ this is my project where i'm creating music app using flutter ....
 
 3 - trying to play the music fetching from device with just_audio package
         ## getting error and try to solve it ( multidexsupport error on android app)
+
+
+4- add single page for now playing song and redirect user to it
+5- make song playing when redirecting
+6- implement the play pause song functionnality
+7- implement the stop song when navigating back to the songs list
