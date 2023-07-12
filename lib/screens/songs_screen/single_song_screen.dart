@@ -18,6 +18,9 @@ class _SingleSongScreenState extends State<SingleSongScreen> {
   bool _isSongPlaying = false;
   bool _shouldAskArgumentRoute = true;
 
+  Duration duration = const Duration();
+  Duration position = const Duration();
+
 
   _getArgumentRoute(){
     recoverSong = ModalRoute.of(context)!.settings.arguments as SongModel;
@@ -28,7 +31,11 @@ class _SingleSongScreenState extends State<SingleSongScreen> {
     _stopSong();
     Navigator.of(context).pop();
   }
-  _handlePlayerSlider(double value) {}
+  _handlePlayerSlider(double value) {
+    var duration = Duration(seconds: value.toInt());
+    _audioPlayer.seek(duration);
+    setState(() {});
+  }
   _moveToPreviousSong() {}
   _togglePlaying() {
     if(_isSongPlaying) {
@@ -47,6 +54,14 @@ class _SingleSongScreenState extends State<SingleSongScreen> {
       );
       _audioPlayer.play();
       _isSongPlaying = true;
+      _audioPlayer.durationStream.listen((duration) {
+        this.duration = duration!;
+        setState(() {});
+      });
+      _audioPlayer.positionStream.listen((position) {
+        this.position = position;
+        setState(() {});
+      });
       setState(() {});
     } on Exception {
       log("Error when trying to play song!");
@@ -165,16 +180,20 @@ class _SingleSongScreenState extends State<SingleSongScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const Text("00.00"),
+         Text(
+             position.toString().split(".")[0]
+        ),
         Expanded(
           child: Slider(
-            value: 1.7,
+            value: position.inSeconds.toDouble(),
             min: 0.0,
-            max: 3.5,
+            max: duration.inSeconds.toDouble(),
             onChanged: (value) => _handlePlayerSlider(value),
           ),
         ),
-        const Text("03.05"),
+         Text(
+          duration.toString().split(".")[0]
+        ),
       ],
     );
   }

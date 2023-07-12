@@ -22,3 +22,4 @@ this is my project where i'm creating music app using flutter ....
 5- make song playing when redirecting
 6- implement the play pause song functionnality
 7- implement the stop song when navigating back to the songs list
+8- implement the modify slider player method
