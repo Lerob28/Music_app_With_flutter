@@ -1,4 +1,4 @@
-package com.example.simple_counter_app
+package com.example.inch_music_player
 
 import io.flutter.embedding.android.FlutterActivity
 
