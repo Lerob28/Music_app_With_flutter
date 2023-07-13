@@ -3,6 +3,9 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:on_audio_query/on_audio_query.dart';
+import 'package:just_audio_background/just_audio_background.dart';
+
+//android:name=".MainActivity"
 
 class SingleSongScreen extends StatefulWidget {
   const SingleSongScreen({Key? key}) : super(key: key);
@@ -52,6 +55,17 @@ class _SingleSongScreenState extends State<SingleSongScreen> {
       _audioPlayer.setAudioSource(
           AudioSource.uri(Uri.parse(songUri!))
       );
+      _audioPlayer.setAudioSource(
+        AudioSource.uri(
+          Uri.parse(songUri),
+          tag: MediaItem(
+            id: recoverSong!.id.toString(),
+            album: recoverSong.album,
+            title: recoverSong.displayNameWOExt,
+            artUri: Uri.parse(songUri),
+          ),
+        ),
+      );
       _audioPlayer.play();
       _isSongPlaying = true;
       _audioPlayer.durationStream.listen((duration) {
@@ -94,23 +108,17 @@ class _SingleSongScreenState extends State<SingleSongScreen> {
   _bodyWidget(SongModel song) {
     return SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(10.0),
           child:  Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children:  [
               _backButtonWidget(),
-              const SizedBox(height: 120),
+              SizedBox(height: MediaQuery.of(context).size.height / 30),
               _playingSongIconWidget(),
               _songNameWidget(song.displayNameWOExt),
               _artistNameWidget(song.artist),
-              SizedBox(
-                height: 90,
-                child: _songPlayerSliderWidget(),
-              ),
-              SizedBox(
-                height: 30,
-                child: _songPlayerControlButtonsWidget(),
-              )
+              _songPlayerSliderWidget(),
+              _songPlayerControlButtonsWidget(),
             ],
           ),
         )
@@ -202,29 +210,40 @@ class _SingleSongScreenState extends State<SingleSongScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
+        const Flexible(
+          flex: 1,
+          child: SizedBox(),
+        ),
         IconButton(
             onPressed: () => _moveToPreviousSong(),
+            iconSize: 50,
             icon: const Icon(
               Icons.skip_previous,
-              size: 40,
             ),
         ),
         IconButton(
             onPressed: () => _togglePlaying(),
-            icon: Icon(
-              _isSongPlaying
-                  ? Icons.pause_outlined
-                  : Icons.play_arrow,
-              size: 40,
-              color: Colors.lightBlueAccent.withOpacity(0.9),
+            iconSize: 70,
+            icon: CircleAvatar(
+             radius: 40,
+              child: Icon(
+                _isSongPlaying
+                    ? Icons.pause_outlined
+                    : Icons.play_arrow,
+                color: Colors.lightBlueAccent.withOpacity(0.9),
+              ),
             ),
         ),
         IconButton(
             onPressed: () => _moveToNextSong(),
+            iconSize: 50,
             icon: const Icon(
               Icons.skip_next,
-              size: 40,
             ),
+        ),
+        const Flexible(
+          flex: 1,
+          child: SizedBox(),
         ),
       ],
     );

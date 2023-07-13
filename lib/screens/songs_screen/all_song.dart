@@ -120,15 +120,19 @@ class _AllSongScreenState extends State<AllSongScreen> {
         return Padding(
           padding: const EdgeInsets.all(5.0),
           child: ListTile(
-            leading: const CircleAvatar(
+            leading: QueryArtworkWidget(
+              id: songList![index].id,
+              type: ArtworkType.ARTIST,
+              nullArtworkWidget: const CircleAvatar(
                 radius: 20,
                 child:  Icon(Icons.music_note),
+              ),
             ),
             title: Text(songList![index].displayName),
             subtitle: (songList![index].artist == null) || (songList![index].artist == '<unknown>')
               ? Text('Borel Njeunkwe ${'    '}${songList![index].duration}')
-              : Text('${songList![index].artist}${'    '}${songList![index].duration}'),
-            trailing: const Icon(Icons.more_horiz),
+              : Text('${songList![index].artist}${'    '}${songList![index].size}'),
+            trailing: const Icon(Icons.navigate_next),
             onTap: () => _navigateToSingleSongScreen(selectedSong: songList![index]),
           ),
         );

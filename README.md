@@ -23,3 +23,6 @@ this is my project where i'm creating music app using flutter ....
 6- implement the play pause song functionnality
 7- implement the stop song when navigating back to the songs list
 8- implement the modify slider player method
+9- show the image of song in list song view with given widget of on_audio_player package
+10- making song playing in background
+    # adding permission to android Manifest file
